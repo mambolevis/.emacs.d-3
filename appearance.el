@@ -1,14 +1,20 @@
 ;; Font
-(set-frame-font "Monaco-10.5" nil t)
-;; FIXME: why the above line is not sufficient to set font with emacsclient
-(setq default-frame-alist '((font . "Monaco-10.5")))
+;; Make sure if emacs is not running on foreign computer
+(when (string-match "\\(arch\\|laptop\\)" system-name)
+ (set-frame-font "Monaco-10.5" nil t)
+ ;; FIXME: why the above line is not sufficient to set font with emacsclient
+ (setq default-frame-alist '((font . "Monaco-10.5"))))
 
 ;; Load theme
 (defvar my-themes '(sanityinc-tomorrow-night
                     sanityinc-tomorrow-day)
   "List of themes to switch between")
 
-(load-theme (car my-themes) t)
+(if (>= emacs-major-version 24)
+    (load-theme (car my-themes) t)
+  ;; If emacs 23 is running load hard coded theme
+  (color-theme-initialize)
+  (color-theme-sanityinc-tomorrow-night))
 
 (defun my-themes-cycle ()
   "Load the next theme from `my-themes' list"
